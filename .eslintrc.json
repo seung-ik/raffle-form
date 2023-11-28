@@ -1,0 +1,38 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["react", "@typescript-eslint", "node"],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "semi": ["error", "always"],
+    // "quotes": ["error", "single"],
+    "consistent-return": "off",
+    "default-param-last": "off",
+    "import/extensions": "off",
+    "import/prefer-default-export": "off",
+    "import/no-unresolved": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/control-has-associated-label": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "no-shadow": "off",
+    "no-unused-vars": "off",
+    "no-param-reassign": "off",
+    "no-nested-ternary": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react/no-array-index-key": "off",
+    "react/no-unescaped-entities": "off",
+    "react/jsx-no-constructed-context-values": "off",
+    "react/no-children-prop": "off",
+    "node/no-unsupported-features/es-syntax": "off",
+    "no-undef": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

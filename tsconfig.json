@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    // "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@layout/*": ["src/components/layout/*"],
+      "@sections/*": ["src/components/sections/*"],
+      "@articles/*": ["src/components/articles/*"],
+      "@atoms/*": ["src/components/atoms/*"],
+      "@components/*": ["src/components/*"],
+      "@style/*": ["src/style/*"],
+      "@pages/*": ["src/pages/*"],
+      "@store/*": ["src/store/*"],
+      "@/types/*": ["src/types/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@services/*": ["src/services/*"],
+      "@graphql/*": ["src/graphql/*"],
+      "@utils/*": ["src/utils/*"],
+      "@const/*": ["src/const/*"],
+      "@assets/*": ["src/assets/*"]
+    }
+  },
+  "include": ["src", "config-overrides.ts", "makeMockData.js"]
+}
