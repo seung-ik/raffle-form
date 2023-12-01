@@ -1,9 +1,14 @@
 import Header from '@components/Header';
 import { PRIMARY_COLOR } from '@const/style';
 import styled from '@emotion/styled';
-import { Box, Button, Input, Stack } from '@mui/material';
+import { Box, Button, FormControl, Input } from '@mui/material';
 import React, { useState } from 'react';
 import Qgenerator from '../../components/Qgenerator';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/de';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { right } from '@popperjs/core';
 
 const MainPage = () => {
   const [surveyTitle, setSurveyTitle] = useState('');
@@ -158,14 +163,24 @@ const MainPage = () => {
         </Col>
 
         <Row mt={4}>
-          <Button
-            variant="contained"
-            onClick={() =>
-              console.log({ title: surveyTitle, desc: surveyDesc, questions: questionInfo })
-            }
-          >
-            Submit
-          </Button>
+          <Box style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
+              <FormControl sx={{ padding: 0, minWidth: 240 }} size="small">
+                <DateTimePicker
+                  label="Set Automate Time"
+                  slotProps={{ textField: { size: 'small' } }}
+                />
+              </FormControl>
+            </LocalizationProvider>
+            <Button
+              variant="contained"
+              onClick={() =>
+                console.log({ title: surveyTitle, desc: surveyDesc, questions: questionInfo })
+              }
+            >
+              Submit
+            </Button>
+          </Box>
           <Button variant="outlined" onClick={onAddQuestionClick}>
             Add Question
           </Button>
@@ -191,6 +206,7 @@ const Row = styled(Box)`
   min-width: 580px;
   max-width: 880px;
   width: 100%;
+  align-items: center;
 `;
 
 const Col = styled(Box)`
