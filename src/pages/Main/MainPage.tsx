@@ -8,11 +8,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/de';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { right } from '@popperjs/core';
+
+import { doc, setDoc, getDocs, collection, getDoc, where, query } from 'firebase/firestore';
+import { db, auth } from '../../firebase';
 
 const MainPage = () => {
   const [surveyTitle, setSurveyTitle] = useState('');
   const [surveyDesc, setSurveyDesc] = useState('');
+  const [automateTime, setAutomateTime] = useState<null | Date>(null);
   const [questionInfo, setQuestionInfo] = useState([
     {
       id: crypto.randomUUID(),
@@ -109,9 +112,59 @@ const MainPage = () => {
     );
   };
 
+  const onClickSubmit = async () => {
+    // console.log(auth.currentUser);
+
+    if (!auth.currentUser) {
+      alert('login이 필요합니다');
+      return;
+    }
+    const userInfo = auth.currentUser;
+    const surveyId = crypto.randomUUID();
+
+    const data = await setDoc(
+      doc(db, 'question', surveyId),
+      {
+        survey_id: surveyId,
+        user_id: userInfo.uid,
+        survey_title: surveyTitle,
+        survey_describe: surveyDesc,
+        automate_time: automateTime,
+      },
+      { merge: true },
+    );
+    console.log(data, 'save');
+  };
+
+  // async function test1() {
+  //   // const docRef = doc(db, 'question', '1');
+
+  //   const data = await getDocs(collection(db, 'question'));
+  //   // console.log(data);
+  //   console.log(data);
+
+  //   data.forEach((doc) => {
+  //     console.log(doc);
+  //     console.log(doc.id);
+  //     console.log(doc.data());
+  //   });
+  // }
+
+  // async function test1() {
+  //   const q = query(
+  //     collection(db, 'yourCollectionName'),
+  //     where('survey_id', '==', 'd67dbd49-53f7-464f-8eba-cd57f57464f4'),
+  //   );
+  //   const docRef = doc(db, , 'question');
+  //   const docSnap = await getDoc(docRef);
+
+  //   console.log(docSnap.data());
+  // }
+
   return (
     <>
       <Header />
+      {/* <button onClick={test1}>test1</button> */}
       <Wrapper>
         <Box
           borderTop={`10px solid ${PRIMARY_COLOR}`}
@@ -169,15 +222,12 @@ const MainPage = () => {
                 <DateTimePicker
                   label="Set Automate Time"
                   slotProps={{ textField: { size: 'small' } }}
+                  value={automateTime}
+                  onChange={(e: any) => setAutomateTime(e.target.value)}
                 />
               </FormControl>
             </LocalizationProvider>
-            <Button
-              variant="contained"
-              onClick={() =>
-                console.log({ title: surveyTitle, desc: surveyDesc, questions: questionInfo })
-              }
-            >
+            <Button variant="contained" onClick={onClickSubmit}>
               Submit
             </Button>
           </Box>

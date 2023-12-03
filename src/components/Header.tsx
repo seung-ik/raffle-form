@@ -13,14 +13,12 @@ const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
-  console.log('auth', auth);
 
   function handleGoogleLogin() {
     const provider = new GoogleAuthProvider(); // provider를 구글로 설정
     signInWithPopup(auth, provider) // popup을 이용한 signup
       .then((data: any) => {
         setIsLoggedIn(true); // user data 설정
-        console.log(data); // console로 들어온 데이터 표시
       })
       .catch((err) => {
         console.log(err);
@@ -30,7 +28,6 @@ const Header = () => {
   function handleGoogleLogout() {
     signOut(auth)
       .then((data) => {
-        console.log(data);
         setIsLoggedIn(false);
       })
       .catch((err) => {
