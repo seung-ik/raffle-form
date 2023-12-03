@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     // "target": "es5",
+    "types": ["firebase", "node"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
