@@ -117,7 +117,7 @@ const MainPage = () => {
 
   const onClickSubmit = async () => {
     if (!auth.currentUser) {
-      alert('login이 필요합니다');
+      alert('requires a login.');
       return;
     }
     const userInfo = auth.currentUser;

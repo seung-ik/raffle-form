@@ -1,27 +1,28 @@
 import { PRIMARY_COLOR } from '@const/style';
 import styled from '@emotion/styled';
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Input,
-  Radio,
-  RadioGroup,
-} from '@mui/material';
+import { Box, Button, Input } from '@mui/material';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../firebase';
-import { CheckBox } from '@mui/icons-material';
+import AnswerQItem from '@components/AnswerQItem';
 
 const EnrollmentPage = () => {
   const { id } = useParams();
   const [surveyInfo, setSurveyInfo] = useState({ survey_title: '', survey_describe: '' });
-  const [questions, setQuestions] = useState([]);
-  console.log(questions);
+  const [questions, setQuestions] = useState<any[]>([]);
+  console.log(questions, 'questions');
+
+  const handleAnswer = (_id: string, _info: any) => {
+    const answersWithQuestion = questions.map((question) => {
+      if (question.id === _id) {
+        return _info;
+      } else {
+        return question;
+      }
+    });
+    setQuestions(answersWithQuestion);
+  };
 
   async function queryDocumentsByField(
     collectionName: string,
@@ -47,7 +48,11 @@ const EnrollmentPage = () => {
 
         const questionInfo = await queryDocumentsByField('detail', 'survey_id', _surveyId);
         // setSurveys(res);
-        setQuestions(questionInfo[0].questions);
+        setQuestions(
+          questionInfo[0].questions.map((el: any) => {
+            return { ...el, selectedOptions: [], shortAnswer: '' };
+          }),
+        );
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -69,81 +74,21 @@ const EnrollmentPage = () => {
         mb="36px"
       >
         <Box border="2px solid #DADCE0" borderTop="none" padding="12px">
-          <Input
-            autoFocus
-            placeholder="Untitled Questionnaire"
-            disableUnderline
-            value={surveyInfo.survey_title}
-          />
+          <div>{surveyInfo.survey_title}</div>
         </Box>
         <Box border="2px solid #DADCE0" borderTop="none" padding="12px" borderRadius="0 0 4px 4px">
-          <Input
-            sx={{ color: PRIMARY_COLOR, fontSize: '14px' }}
-            placeholder="Describe your survey"
-            value={surveyInfo.survey_describe}
-            disableUnderline
-          />
+          <div style={{ color: PRIMARY_COLOR, fontSize: '14px' }}>{surveyInfo.survey_describe}</div>
         </Box>
       </Box>
       <Col>
         {questions.length > 0 &&
           questions.map((question: any) => {
-            return (
-              <Box
-                border="2px solid #DADCE0"
-                borderRadius="4px"
-                minWidth="580px"
-                maxWidth="880px"
-                width="100%"
-                p="20px 24px"
-                key={question.id}
-              >
-                <div>{question.title}</div>
-
-                {question.type === 'short' && (
-                  <Input value={'value'} onChange={() => console.log('change')} />
-                )}
-                {question.type === 'multiple' && (
-                  <FormGroup>
-                    {question.options.map((option: any) => {
-                      return (
-                        <FormControlLabel
-                          key={option.id}
-                          control={<Checkbox />}
-                          label={option.value}
-                          value={option.id}
-                        />
-                      );
-                    })}
-                  </FormGroup>
-                )}
-                {question.type === 'single' && (
-                  <FormControl>
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="female"
-                      name="radio-buttons-group"
-                    >
-                      {question.options.map((option: any) => {
-                        return (
-                          <FormControlLabel
-                            key={option.id}
-                            value={option.id}
-                            control={<Radio />}
-                            label={option.value}
-                          />
-                        );
-                      })}
-                    </RadioGroup>
-                  </FormControl>
-                )}
-              </Box>
-            );
+            return <AnswerQItem data={question} key={question.id} onChangeAnswer={handleAnswer} />;
           })}
       </Col>
 
       <Row mt={4}>
-        <Button variant="contained" onClick={() => console.log('submit')}>
+        <Button variant="contained" onClick={() => console.log(questions)}>
           Submit
         </Button>
       </Row>
