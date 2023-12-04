@@ -1,7 +1,7 @@
-import { PRIMARY_COLOR } from '@const/style';
+import { GRAY, PRIMARY_COLOR } from '@const/style';
 import styled from '@emotion/styled';
 import { Box, Button, Input } from '@mui/material';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../firebase';
@@ -9,9 +9,23 @@ import AnswerQItem from '@components/AnswerQItem';
 
 const EnrollmentPage = () => {
   const { id } = useParams();
+  const [email, setEmail] = useState('');
   const [surveyInfo, setSurveyInfo] = useState({ survey_title: '', survey_describe: '' });
   const [questions, setQuestions] = useState<any[]>([]);
-  console.log(questions, 'questions');
+
+  const onClickSubmit = async () => {
+    console.log('submit', email, questions);
+    const answerId = crypto.randomUUID();
+    await setDoc(
+      doc(db, 'answer', answerId),
+      {
+        survey_id: id,
+        user_email: email,
+        answers: questions,
+      },
+      { merge: true },
+    );
+  };
 
   const handleAnswer = (_id: string, _info: any) => {
     const answersWithQuestion = questions.map((question) => {
@@ -81,6 +95,22 @@ const EnrollmentPage = () => {
         </Box>
       </Box>
       <Col>
+        <Box
+          border="2px solid #DADCE0"
+          borderRadius="4px"
+          minWidth="580px"
+          maxWidth="880px"
+          width="100%"
+          p="20px 24px"
+        >
+          <Input
+            disableUnderline
+            value={email}
+            placeholder="Please enter your email"
+            style={{ borderBottom: `1px solid ${GRAY}`, width: '100%' }}
+            onChange={(e: any) => setEmail(e.target.value)}
+          />
+        </Box>
         {questions.length > 0 &&
           questions.map((question: any) => {
             return <AnswerQItem data={question} key={question.id} onChangeAnswer={handleAnswer} />;
@@ -88,7 +118,7 @@ const EnrollmentPage = () => {
       </Col>
 
       <Row mt={4}>
-        <Button variant="contained" onClick={() => console.log(questions)}>
+        <Button variant="contained" onClick={onClickSubmit}>
           Submit
         </Button>
       </Row>

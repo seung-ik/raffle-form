@@ -47,7 +47,7 @@ const Header = () => {
       <Button isActive={pathname === Paths.Survey} onClick={() => navigate(Paths.Survey)}>
         Survey
       </Button>
-      <Button isActive={pathname === Paths.Answer} onClick={() => navigate(Paths.Answer)}>
+      <Button isActive={pathname !== Paths.Survey} onClick={() => navigate(Paths.Answer)}>
         Answer
       </Button>
       {isLoggedIn ? (

@@ -1,5 +1,5 @@
 import Header from '@components/Header';
-import { PRIMARY_COLOR } from '@const/style';
+import { GRAY, PRIMARY_COLOR } from '@const/style';
 import styled from '@emotion/styled';
 import { Box, Button, FormControl, Input } from '@mui/material';
 import React, { useState } from 'react';
@@ -186,6 +186,20 @@ const MainPage = () => {
           </Box>
         </Box>
         <Col>
+          <Box
+            border="2px solid #DADCE0"
+            borderRadius="4px"
+            minWidth="580px"
+            maxWidth="880px"
+            width="100%"
+            p="20px 24px"
+          >
+            <Input
+              disableUnderline
+              value="email"
+              style={{ borderBottom: `1px solid ${GRAY}`, width: '100%' }}
+            />
+          </Box>
           {questionInfo.map((info) => {
             return (
               <Qgenerator

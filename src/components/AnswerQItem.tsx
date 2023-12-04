@@ -53,7 +53,16 @@ const AnswerQItem: React.FC<Props> = ({ data, onChangeAnswer }) => {
       width="100%"
       p="20px 24px"
     >
-      <div style={{ fontWeight: 'bold', marginBottom: '12px' }}>Q. {data.title}</div>
+      <div
+        style={{
+          fontWeight: 'bold',
+          marginBottom: '12px',
+          borderBottom: '2px solid #DADCE0',
+          paddingBottom: '4px',
+        }}
+      >
+        Q. {data.title}
+      </div>
 
       {data.type === 'short' && (
         <Input style={{ width: '70%' }} value={data.shortAnswer} onChange={onChangeShortAnswer} />
