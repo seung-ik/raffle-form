@@ -7,10 +7,15 @@ import { PRIMARY_COLOR } from '@const/style';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
+import { useRecoilState } from 'recoil';
+import { isLoggedInState } from '@store/userState';
+import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const AnswerPage = () => {
   const [surveys, setSurveys] = useState<any[]>([]);
-  console.log(window.location);
+  const navigate = useNavigate();
+
   async function queryDocumentsByField(
     collectionName: string,
     fieldName: string,
@@ -28,83 +33,109 @@ const AnswerPage = () => {
   }
 
   useEffect(() => {
-    if (auth.currentUser) {
-      console.log('call');
-      queryDocumentsByField('question', 'user_id', auth.currentUser.uid).then((res) => {
+    const fetchData = async () => {
+      try {
+        const res = await queryDocumentsByField(
+          'question',
+          'user_id',
+          auth.currentUser?.uid as string,
+        );
         setSurveys(res);
-      });
-    }
-  }, [auth.currentUser]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchData();
+      } else {
+        alert('requires a login.');
+        navigate('/survey');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <>
       <Header />
-      {surveys.map((survey) => {
-        console.log(survey);
-        return (
-          <Wrapper key={survey.id}>
-            <Box
-              border="2px solid #DADCE0"
-              borderRadius="4px"
-              // minWidth="580px"
-              maxWidth="880px"
-              width="100%"
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  borderBottom: '2px solid #DADCE0',
-                  padding: '32px 40px 16px',
-                }}
-              >
-                <span style={{ fontSize: '36px' }}>{survey.title}</span>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px',
+          marginTop: '42px',
+          marginBottom: '60px',
+        }}
+      >
+        {surveys.map((survey) => {
+          return (
+            <Wrapper key={survey.id}>
+              <Box border="2px solid #DADCE0" borderRadius="4px" maxWidth="880px" width="100%">
                 <div
                   style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    position: 'relative',
-                    bottom: '-12px',
+                    justifyContent: 'space-between',
+                    borderBottom: '2px solid #DADCE0',
+                    padding: '32px 20px 16px',
                   }}
                 >
-                  <span>Closed Survey</span>
-                  <ToggleOnIcon
-                    sx={{ fontSize: 32, color: PRIMARY_COLOR, cursor: 'pointer' }}
-                    // onClick={() => onToggleEssential(item.id)}
-                  />
+                  <span style={{ fontSize: '36px' }}>{survey.survey_title}</span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      position: 'relative',
+                      bottom: '-12px',
+                    }}
+                  >
+                    <span>Closed Survey</span>
+                    <ToggleOnIcon
+                      sx={{ fontSize: 32, color: PRIMARY_COLOR, cursor: 'pointer' }}
+                      // onClick={() => onToggleEssential(item.id)}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div
-                  style={{ display: 'flex', alignItems: 'center' }}
-                  onClick={() =>
-                    window.open(`${window.location.origin}/enroll/${survey.survey_id}`, '_blank')
-                  }
+                  style={{ display: 'flex', justifyContent: 'space-between', padding: '0 20px' }}
                 >
-                  {`참여링크 : ${window.location.origin}/enroll/${survey.survey_id}`}
-                </div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    Link :
+                    <span
+                      style={{ textDecoration: 'underline', color: 'blue', marginLeft: '4px' }}
+                      onClick={() =>
+                        window.open(
+                          `${window.location.origin}/enroll/${survey.survey_id}`,
+                          '_blank',
+                        )
+                      }
+                    >{`${window.location.origin}/enroll/${survey.survey_id}`}</span>
+                  </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '12px 40px',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <UploadFileOutlinedIcon
-                    sx={{ fontSize: 32, color: 'green', cursor: 'pointer' }}
-                  />
-                  <span>download as excel</span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '12px 40px',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <UploadFileOutlinedIcon
+                      sx={{ fontSize: 32, color: 'green', cursor: 'pointer' }}
+                    />
+                    <span>download as excel</span>
+                  </div>
                 </div>
-              </div>
-            </Box>
-          </Wrapper>
-        );
-      })}
+              </Box>
+            </Wrapper>
+          );
+        })}
+      </div>
     </>
   );
 };
@@ -112,7 +143,6 @@ const AnswerPage = () => {
 export default AnswerPage;
 
 const Wrapper = styled('div')`
-  padding: 42px 24px;
   display: flex;
   align-items: center;
   flex-direction: column;

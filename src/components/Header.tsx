@@ -13,6 +13,7 @@ const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
+  console.log(isLoggedIn);
 
   function handleGoogleLogin() {
     const provider = new GoogleAuthProvider(); // provider를 구글로 설정

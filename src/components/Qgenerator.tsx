@@ -87,7 +87,7 @@ const Qgenerator: React.FC<Props> = ({
           );
         })}
 
-      {item.type === 'multiple' && (
+      {item.type !== 'short' && (
         <Row mt={2}>
           <CircleOutlinedIcon sx={{ fontSize: 20, color: GRAY }} />
           <span

@@ -8,14 +8,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/de';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-
-import { doc, setDoc, getDocs, collection, getDoc, where, query } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
+import dayjs from 'dayjs';
+import { Paths } from '@pages/Router';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
+  const navigate = useNavigate();
   const [surveyTitle, setSurveyTitle] = useState('');
   const [surveyDesc, setSurveyDesc] = useState('');
-  const [automateTime, setAutomateTime] = useState<null | Date>(null);
+  const [automateTime, setAutomateTime] = useState<null | string>(null);
   const [questionInfo, setQuestionInfo] = useState([
     {
       id: crypto.randomUUID(),
@@ -113,16 +116,13 @@ const MainPage = () => {
   };
 
   const onClickSubmit = async () => {
-    // console.log(auth.currentUser);
-
     if (!auth.currentUser) {
       alert('login이 필요합니다');
       return;
     }
     const userInfo = auth.currentUser;
     const surveyId = crypto.randomUUID();
-
-    const data = await setDoc(
+    await setDoc(
       doc(db, 'question', surveyId),
       {
         survey_id: surveyId,
@@ -133,33 +133,18 @@ const MainPage = () => {
       },
       { merge: true },
     );
-    console.log(data, 'save');
+
+    await setDoc(
+      doc(db, 'detail', surveyId),
+      {
+        survey_id: surveyId,
+        questions: questionInfo,
+      },
+      { merge: true },
+    );
+    alert('success submit event');
+    navigate(Paths.Answer);
   };
-
-  // async function test1() {
-  //   // const docRef = doc(db, 'question', '1');
-
-  //   const data = await getDocs(collection(db, 'question'));
-  //   // console.log(data);
-  //   console.log(data);
-
-  //   data.forEach((doc) => {
-  //     console.log(doc);
-  //     console.log(doc.id);
-  //     console.log(doc.data());
-  //   });
-  // }
-
-  // async function test1() {
-  //   const q = query(
-  //     collection(db, 'yourCollectionName'),
-  //     where('survey_id', '==', 'd67dbd49-53f7-464f-8eba-cd57f57464f4'),
-  //   );
-  //   const docRef = doc(db, , 'question');
-  //   const docSnap = await getDoc(docRef);
-
-  //   console.log(docSnap.data());
-  // }
 
   return (
     <>
@@ -181,6 +166,7 @@ const MainPage = () => {
               disableUnderline
               value={surveyTitle}
               onChange={(e) => setSurveyTitle(e.target.value)}
+              style={{ width: '70%' }}
             />
           </Box>
           <Box
@@ -194,6 +180,7 @@ const MainPage = () => {
               placeholder="Describe your survey"
               value={surveyDesc}
               onChange={(e) => setSurveyDesc(e.target.value)}
+              style={{ width: '70%' }}
               disableUnderline
             />
           </Box>
@@ -222,8 +209,11 @@ const MainPage = () => {
                 <DateTimePicker
                   label="Set Automate Time"
                   slotProps={{ textField: { size: 'small' } }}
-                  value={automateTime}
-                  onChange={(e: any) => setAutomateTime(e.target.value)}
+                  value={automateTime ? new Date(automateTime) : null}
+                  onChange={(newDate: Date | null) => {
+                    const dateString = newDate ? dayjs(newDate).format('YYYY-MM-DD HH:mm:ss') : '';
+                    setAutomateTime(dateString);
+                  }}
                 />
               </FormControl>
             </LocalizationProvider>
