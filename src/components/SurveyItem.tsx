@@ -25,7 +25,10 @@ const SurveyItem: React.FC<Props> = ({ data }) => {
             padding: '32px 20px 16px',
           }}
         >
-          <span style={{ fontSize: '36px' }} onClick={() => navigate(`/participants/${data.id}`)}>
+          <span
+            style={{ fontSize: '36px', fontWeight: '550', cursor: 'pointer' }}
+            onClick={() => navigate(`/participants/${data.id}`)}
+          >
             {data.survey_title}
           </span>
           <div
