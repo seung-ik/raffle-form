@@ -13,8 +13,10 @@ import { db, auth } from '../../firebase';
 import dayjs from 'dayjs';
 import { Paths } from '@pages/Router';
 import { useNavigate } from 'react-router-dom';
+import { useRaffleContract } from '@hooks/useRaffleContract';
 
 const MainPage = () => {
+  const { getSurvey, setSurvey } = useRaffleContract();
   const navigate = useNavigate();
   const [surveyTitle, setSurveyTitle] = useState('');
   const [surveyDesc, setSurveyDesc] = useState('');
@@ -116,40 +118,61 @@ const MainPage = () => {
   };
 
   const onClickSubmit = async () => {
+    if (!automateTime) {
+      alert('Set automate time');
+      return;
+    }
+
     if (!auth.currentUser) {
       alert('requires a login.');
       return;
     }
+
     const userInfo = auth.currentUser;
     const surveyId = crypto.randomUUID();
-    await setDoc(
-      doc(db, 'question', surveyId),
-      {
-        survey_id: surveyId,
-        user_id: userInfo.uid,
-        survey_title: surveyTitle,
-        survey_describe: surveyDesc,
-        automate_time: automateTime,
-      },
-      { merge: true },
-    );
+    const parsedAutomatTime = new Date(automateTime).getTime();
 
-    await setDoc(
-      doc(db, 'detail', surveyId),
-      {
-        survey_id: surveyId,
-        questions: questionInfo,
-      },
-      { merge: true },
-    );
+    try {
+      await setDoc(
+        doc(db, 'question', surveyId),
+        {
+          survey_id: surveyId,
+          user_id: userInfo.uid,
+          survey_title: surveyTitle,
+          survey_describe: surveyDesc,
+          automate_time: automateTime,
+        },
+        { merge: true },
+      );
+
+      await setDoc(
+        doc(db, 'detail', surveyId),
+        {
+          survey_id: surveyId,
+          questions: questionInfo,
+        },
+        { merge: true },
+      );
+
+      const txResult = await setSurvey(parsedAutomatTime, surveyId); // 컨트랙트에 저장
+      console.log(txResult, 'transaction Result');
+    } catch (err) {
+      console.log(err);
+    }
+
     alert('success submit event');
     navigate(Paths.Answer);
+  };
+
+  const test1 = () => {
+    console.log('test');
+    getSurvey(123123);
   };
 
   return (
     <>
       <Header />
-      {/* <button onClick={test1}>test1</button> */}
+      <button onClick={test1}>test1</button>
       <Wrapper>
         <Box
           borderTop={`10px solid ${PRIMARY_COLOR}`}
