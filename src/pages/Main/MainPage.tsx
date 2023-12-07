@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import { Paths } from '@pages/Router';
 import { useNavigate } from 'react-router-dom';
 import { useRaffleContract } from '@hooks/useRaffleContract';
+import SubmitWithDialog from '@components/SubmitWithDialog';
 
 const MainPage = () => {
   const { getSurvey, setSurvey } = useRaffleContract();
@@ -30,6 +31,9 @@ const MainPage = () => {
       options: [{ id: crypto.randomUUID(), value: '' }],
     },
   ]);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [txResult, setTxResult] = useState<any>({});
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   const handleQTitle = (_id: string, _value: string) => {
     const newInfo = questionInfo.map((info) => {
@@ -128,6 +132,9 @@ const MainPage = () => {
       return;
     }
 
+    setIsOpenDialog(true);
+    setSubmitLoading(true);
+
     const userInfo = auth.currentUser;
     const surveyId = crypto.randomUUID();
     const parsedAutomatTime = new Date(automateTime).getTime();
@@ -155,24 +162,21 @@ const MainPage = () => {
       );
 
       const txResult = await setSurvey(parsedAutomatTime, surveyId); // 컨트랙트에 저장
-      console.log(txResult, 'transaction Result');
+      setTxResult(txResult);
     } catch (err) {
       console.log(err);
+    } finally {
+      setSubmitLoading(false);
     }
-
-    alert('success submit event');
-    navigate(Paths.Answer);
   };
 
-  const test1 = () => {
-    console.log('test');
-    getSurvey(123123);
+  const submitCallback = () => {
+    navigate(Paths.Answer);
   };
 
   return (
     <>
       <Header />
-      <button onClick={test1}>test1</button>
       <Wrapper>
         <Box
           borderTop={`10px solid ${PRIMARY_COLOR}`}
@@ -254,9 +258,17 @@ const MainPage = () => {
                 />
               </FormControl>
             </LocalizationProvider>
-            <Button variant="contained" onClick={onClickSubmit}>
+            {/* <Button variant="contained" onClick={onClickSubmit}>
               Submit
-            </Button>
+            </Button> */}
+            <SubmitWithDialog
+              submit={onClickSubmit}
+              callback={submitCallback}
+              isLoading={submitLoading}
+              data={txResult}
+              isOpen={isOpenDialog}
+              setIsOpen={setIsOpenDialog}
+            />
           </Box>
           <Button variant="outlined" onClick={onAddQuestionClick}>
             Add Question

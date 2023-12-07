@@ -19,6 +19,7 @@ const OptionItem: React.FC<Props> = ({ item, qId, onChange }) => {
         disableUnderline
         value={item.value}
         onChange={(e) => onChange(qId, item.id, e.target.value)}
+        style={{ width: '70%' }}
       />
     </Row>
   );
