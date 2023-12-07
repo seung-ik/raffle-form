@@ -22,7 +22,7 @@ const MainPage = () => {
   const [surveyTitle, setSurveyTitle] = useState('');
   const [surveyDesc, setSurveyDesc] = useState('');
   const [automateTime, setAutomateTime] = useState<null | string>(null);
-  const [winnersCount, setWinnersCount] = useState(1);
+  const [winnersCount, setWinnersCount] = useState('1');
   const [questionInfo, setQuestionInfo] = useState([
     {
       id: crypto.randomUUID(),
@@ -123,13 +123,17 @@ const MainPage = () => {
   };
 
   const onClickSubmit = async () => {
+    if (!winnersCount) {
+      alert('Set winners numbers');
+      return;
+    }
     if (!automateTime) {
       alert('Set automate time');
       return;
     }
 
     if (!auth.currentUser) {
-      alert('requires a login.');
+      alert('Requires a login.');
       return;
     }
 
@@ -243,10 +247,10 @@ const MainPage = () => {
                 onChange={(e) => {
                   const inputValue = e.target.value.replace(/[^0-9]/g, '');
 
-                  setWinnersCount(Number(inputValue));
+                  setWinnersCount(inputValue);
                 }}
                 disableUnderline
-                style={{ marginLeft: '6px', width: '48px' }}
+                style={{ marginLeft: '6px', width: '48px', color: PRIMARY_COLOR }}
               />
             </Box>
           </div>
@@ -282,16 +286,16 @@ const MainPage = () => {
         </Col>
 
         <Row mt={4}>
-          <Box style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <SubmitWithDialog
-              submit={onClickSubmit}
-              callback={submitCallback}
-              isLoading={submitLoading}
-              data={txResult}
-              isOpen={isOpenDialog}
-              setIsOpen={setIsOpenDialog}
-            />
-          </Box>
+          <SubmitWithDialog
+            submit={onClickSubmit}
+            callback={submitCallback}
+            isLoading={submitLoading}
+            data={txResult}
+            isOpen={isOpenDialog}
+            setIsOpen={setIsOpenDialog}
+            title="Enroll Survey"
+          />
+
           <Button variant="outlined" onClick={onAddQuestionClick}>
             Add Question
           </Button>

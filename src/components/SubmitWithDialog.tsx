@@ -17,6 +17,7 @@ interface Props {
   data: any;
   isOpen: boolean;
   setIsOpen: (_value: boolean) => void;
+  title: string;
 }
 
 const SubmitWithDialog: React.FC<Props> = ({
@@ -26,10 +27,8 @@ const SubmitWithDialog: React.FC<Props> = ({
   data,
   setIsOpen,
   isOpen,
+  title,
 }) => {
-  console.log(data);
-  console.log('isLoading', isLoading);
-
   const handleClickOpen = () => {
     submit();
   };
@@ -48,7 +47,7 @@ const SubmitWithDialog: React.FC<Props> = ({
       </Button>
       <Dialog open={isOpen} onClose={handleClose}>
         <DialogTitle textAlign={'center'} fontWeight={'bold'} mt={2} fontSize="24px">
-          Enroll Survey
+          {title}
         </DialogTitle>
         <DialogContent>
           <DialogContentText mt={2} textAlign={'center'} fontSize="14px">

@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import { useNavigate } from 'react-router-dom';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { PRIMARY_COLOR } from '@const/style';
+import { GRAY, PRIMARY_COLOR } from '@const/style';
+import dayjs from 'dayjs';
 
 interface Props {
   data: any;
@@ -13,6 +14,10 @@ interface Props {
 const SurveyItem: React.FC<Props> = ({ data }) => {
   const navigate = useNavigate();
   const [isCopied, setIsCopied] = useState(false);
+
+  const targetTimeFormat = 'YYYY-MM-DD HH:mm:ss';
+  const targetTime = dayjs(data.automate_time, { format: targetTimeFormat });
+  const isClosed = dayjs().isAfter(targetTime);
 
   return (
     <Wrapper key={data.id}>
@@ -25,26 +30,49 @@ const SurveyItem: React.FC<Props> = ({ data }) => {
             padding: '32px 20px 16px',
           }}
         >
-          <span
-            style={{ fontSize: '36px', fontWeight: '550', cursor: 'pointer' }}
-            onClick={() => navigate(`/participants/${data.id}`)}
-          >
-            {data.survey_title}
-          </span>
+          <span style={{ fontSize: '36px', fontWeight: '550' }}>{data.survey_title}</span>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              position: 'relative',
-              bottom: '-12px',
             }}
           >
-            <span>Closed Survey</span>
-            <ToggleOnIcon
+            {isClosed ? (
+              <div
+                style={{
+                  color: GRAY,
+                  fontWeight: 'bold',
+                  fontSize: '18px',
+                  cursor: 'pointer',
+                  flexDirection: 'column',
+                  display: 'flex',
+                }}
+                onClick={() => navigate(`/participants/${data.id}`)}
+              >
+                <div>Closed Survey</div>
+                <div style={{ fontSize: '12px' }}>{`(${data.automate_time})`}</div>
+              </div>
+            ) : (
+              <div
+                onClick={() => navigate(`/participants/${data.id}`)}
+                style={{
+                  color: PRIMARY_COLOR,
+                  fontWeight: 'bold',
+                  fontSize: '18px',
+                  cursor: 'pointer',
+                  flexDirection: 'column',
+                  display: 'flex',
+                }}
+              >
+                Ongoing Survey
+                <span style={{ fontSize: '12px' }}>{`(${data.automate_time})`}</span>
+              </div>
+            )}
+            {/* <ToggleOnIcon
               sx={{ fontSize: 32, color: PRIMARY_COLOR, cursor: 'pointer' }}
               // onClick={() => onToggleEssential(item.id)}
-            />
+            /> */}
           </div>
         </div>
 

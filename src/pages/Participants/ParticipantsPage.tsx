@@ -80,6 +80,7 @@ const ParticipantsPage = () => {
               </div>
             </Box>
           </Box>
+          {answerList.length === 0 && <span>There are no participants in the raffle</span>}
           {answerList.map((info: any) => {
             const responseItems = info.answers.filter((answer: any) => {
               if (answer.selectedOptions.length > 0 || answer.shortAnswer) {

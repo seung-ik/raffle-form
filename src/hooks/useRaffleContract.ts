@@ -14,9 +14,22 @@ export function useRaffleContract() {
   const contractAddress = RAFFLE_CONTRACT_ADDRESS;
   const contract = new web3.eth.Contract(contractAbi, contractAddress);
 
+  const addApplicator = async (_userEmail: string, _userId: string) => {
+    const functionName = 'addApplicator';
+    const transaction = contract.methods[functionName](_userEmail, _userId);
+    const gasEstimate = await transaction.estimateGas({ from: account.address });
+
+    const result = await transaction.send({
+      from: account.address,
+      gas: String(Number(gasEstimate) + 10000), // Add some extra gas for safety margin
+    });
+
+    return result;
+  };
+
   const setSurvey = async (_timestamp: number, _surveyId: string): Promise<any> => {
     const functionName = 'setSurvey';
-    const transaction = contract.methods[functionName](_timestamp, 23);
+    const transaction = contract.methods[functionName](_timestamp, 23); //TODO: _surveyId 로 변경해야됨
     const gasEstimate = await transaction.estimateGas({ from: account.address });
 
     const result = await transaction.send({
@@ -37,41 +50,10 @@ export function useRaffleContract() {
     // const contract = new web3.eth.Contract(contractAbi, contractAddress);
     // console.log(contract);
   };
-  // const functionName = 'your_function_name';
-  // const functionParams = [param1, param2, ...]; // Replace with your function parameters
 
-  // useEffect(() => {
-  //   const privateKey = process.env.REACT_APP_PRIVATE_KEY;
-  //   const nodeUrl = 'your_node_url'; // Replace with your node URL
-
-  //   const interactWithContract = async () => {
-  //     try {
-  //       const web3 = new Web3(new Web3.providers.HttpProvider(nodeUrl));
-  //       const account = web3.eth.accounts.privateKeyToAccount(privateKey);
-  //       web3.eth.accounts.wallet.add(account);
-
-  //       const contract = new web3.eth.Contract(contractAbi, contractAddress);
-
-  //       const transaction = contract.methods[functionName](...functionParams);
-  //       const gasEstimate = await transaction.estimateGas({ from: account.address });
-
-  //       const result = await transaction.send({
-  //         from: account.address,
-  //         gas: gasEstimate + 10000, // Add some extra gas for safety margin
-  //       });
-
-  //       console.log('Transaction Result:', result);
-  //     } catch (error) {
-  //       console.error('Transaction Error:', error);
-  //     }
-  //   };
-
-  //   interactWithContract();
-  // }, []);
-
-  // You can return additional data or functions if needed
   return {
     getSurvey,
     setSurvey,
+    addApplicator,
   };
 }

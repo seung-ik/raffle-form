@@ -3,28 +3,54 @@ import styled from '@emotion/styled';
 import { Box, Button, Input } from '@mui/material';
 import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { db } from '../../firebase';
 import AnswerQItem from '@components/AnswerQItem';
+import SubmitWithDialog from '@components/SubmitWithDialog';
+import { Paths } from '@pages/Router';
+import MainPage from '../Main/MainPage';
+import { useRaffleContract } from '@hooks/useRaffleContract';
 
 const EnrollmentPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [surveyInfo, setSurveyInfo] = useState({ survey_title: '', survey_describe: '' });
   const [questions, setQuestions] = useState<any[]>([]);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [txResult, setTxResult] = useState<any>({});
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+
+  const { addApplicator } = useRaffleContract();
 
   const onClickSubmit = async () => {
     console.log('submit', email, questions);
-    const answerId = crypto.randomUUID();
-    await setDoc(
-      doc(db, 'answer', answerId),
-      {
-        survey_id: id,
-        user_email: email,
-        answers: questions,
-      },
-      { merge: true },
-    );
+    setIsOpenDialog(true);
+    setSubmitLoading(true);
+    try {
+      const answerId = crypto.randomUUID();
+
+      await setDoc(
+        doc(db, 'answer', answerId),
+        {
+          survey_id: id,
+          user_email: email,
+          answers: questions,
+        },
+        { merge: true },
+      );
+
+      const txResult = await addApplicator(email, answerId);
+      setTxResult(txResult);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  const submitCallback = () => {
+    navigate(Paths.Survey, { replace: true });
   };
 
   const handleAnswer = (_id: string, _info: any) => {
@@ -118,9 +144,18 @@ const EnrollmentPage = () => {
       </Col>
 
       <Row mt={4}>
-        <Button variant="contained" onClick={onClickSubmit}>
+        {/* <Button variant="contained" onClick={onClickSubmit}>
           Submit
-        </Button>
+        </Button> */}
+        <SubmitWithDialog
+          submit={onClickSubmit}
+          callback={submitCallback}
+          isLoading={submitLoading}
+          data={txResult}
+          isOpen={isOpenDialog}
+          setIsOpen={setIsOpenDialog}
+          title="Join Raffle"
+        />
       </Row>
     </Wrapper>
   );
