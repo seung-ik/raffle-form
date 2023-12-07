@@ -22,6 +22,7 @@ const MainPage = () => {
   const [surveyTitle, setSurveyTitle] = useState('');
   const [surveyDesc, setSurveyDesc] = useState('');
   const [automateTime, setAutomateTime] = useState<null | string>(null);
+  const [winnersCount, setWinnersCount] = useState(1);
   const [questionInfo, setQuestionInfo] = useState([
     {
       id: crypto.randomUUID(),
@@ -148,6 +149,7 @@ const MainPage = () => {
           survey_title: surveyTitle,
           survey_describe: surveyDesc,
           automate_time: automateTime,
+          winnersCount: winnersCount,
         },
         { merge: true },
       );
@@ -213,6 +215,41 @@ const MainPage = () => {
           </Box>
         </Box>
         <Col>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+            }}
+          >
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
+              <FormControl sx={{ padding: 0, minWidth: 240 }} size="small">
+                <DateTimePicker
+                  label="Set Automate Time"
+                  slotProps={{ textField: { size: 'small' } }}
+                  value={automateTime ? new Date(automateTime) : null}
+                  onChange={(newDate: Date | null) => {
+                    const dateString = newDate ? dayjs(newDate).format('YYYY-MM-DD HH:mm:ss') : '';
+                    setAutomateTime(dateString);
+                  }}
+                />
+              </FormControl>
+            </LocalizationProvider>
+            <Box border="1px solid #DADCE0" borderRadius="4px" padding="2px 12px">
+              The number of winners |{' '}
+              <Input
+                value={winnersCount}
+                onChange={(e) => {
+                  const inputValue = e.target.value.replace(/[^0-9]/g, '');
+
+                  setWinnersCount(Number(inputValue));
+                }}
+                disableUnderline
+                style={{ marginLeft: '6px', width: '48px' }}
+              />
+            </Box>
+          </div>
           <Box
             border="2px solid #DADCE0"
             borderRadius="4px"
@@ -227,6 +264,7 @@ const MainPage = () => {
               style={{ borderBottom: `1px solid ${GRAY}`, width: '100%' }}
             />
           </Box>
+
           {questionInfo.map((info) => {
             return (
               <Qgenerator
@@ -245,22 +283,6 @@ const MainPage = () => {
 
         <Row mt={4}>
           <Box style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
-              <FormControl sx={{ padding: 0, minWidth: 240 }} size="small">
-                <DateTimePicker
-                  label="Set Automate Time"
-                  slotProps={{ textField: { size: 'small' } }}
-                  value={automateTime ? new Date(automateTime) : null}
-                  onChange={(newDate: Date | null) => {
-                    const dateString = newDate ? dayjs(newDate).format('YYYY-MM-DD HH:mm:ss') : '';
-                    setAutomateTime(dateString);
-                  }}
-                />
-              </FormControl>
-            </LocalizationProvider>
-            {/* <Button variant="contained" onClick={onClickSubmit}>
-              Submit
-            </Button> */}
             <SubmitWithDialog
               submit={onClickSubmit}
               callback={submitCallback}
