@@ -116,7 +116,9 @@ const EnrollmentPage = () => {
           <div>{surveyInfo.survey_title}</div>
         </Box>
         <Box border="2px solid #DADCE0" borderTop="none" padding="12px" borderRadius="0 0 4px 4px">
-          <div style={{ color: PRIMARY_COLOR, fontSize: '14px' }}>{surveyInfo.survey_describe}</div>
+          <div style={{ color: PRIMARY_COLOR, fontSize: '14px', whiteSpace: 'pre' }}>
+            {surveyInfo.survey_describe}
+          </div>
         </Box>
       </Box>
       <Col>
@@ -188,6 +190,3 @@ const Col = styled(Box)`
   width: 100%;
   gap: 20px;
 `;
-function queryDocumentsByField(arg0: string, arg1: string, arg2: string) {
-  throw new Error('Function not implemented.');
-}

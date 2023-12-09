@@ -208,13 +208,22 @@ const MainPage = () => {
             padding="12px"
             borderRadius="0 0 4px 4px"
           >
-            <Input
-              sx={{ color: PRIMARY_COLOR, fontSize: '14px' }}
+            <textarea
+              style={{
+                color: PRIMARY_COLOR,
+                fontSize: '14px',
+                width: '70%',
+                border: 'none',
+                resize: 'none',
+                height: 'auto',
+                minHeight: '140px',
+                outline: 'none',
+              }}
               placeholder="Describe your survey"
               value={surveyDesc}
-              onChange={(e) => setSurveyDesc(e.target.value)}
-              style={{ width: '70%' }}
-              disableUnderline
+              onChange={(e: any) => {
+                setSurveyDesc(e.target.value);
+              }}
             />
           </Box>
         </Box>
