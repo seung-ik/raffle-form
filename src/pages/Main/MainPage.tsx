@@ -296,6 +296,9 @@ const MainPage = () => {
         </Col>
 
         <Row mt={4}>
+          <Button variant="outlined" onClick={onAddQuestionClick}>
+            Add Question
+          </Button>
           <SubmitWithDialog
             submit={onClickSubmit}
             callback={submitCallback}
@@ -305,10 +308,6 @@ const MainPage = () => {
             setIsOpen={setIsOpenDialog}
             title="Enroll Survey"
           />
-
-          <Button variant="outlined" onClick={onAddQuestionClick}>
-            Add Question
-          </Button>
         </Row>
       </Wrapper>
     </>
