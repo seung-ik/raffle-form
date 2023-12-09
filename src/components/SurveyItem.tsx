@@ -28,7 +28,9 @@ const SurveyItem: React.FC<Props> = ({ data }) => {
             justifyContent: 'space-between',
             borderBottom: '2px solid #DADCE0',
             padding: '32px 20px 16px',
+            cursor: 'pointer',
           }}
+          onClick={() => navigate(`/participants/${data.id}`)}
         >
           <span style={{ fontSize: '36px', fontWeight: '550' }}>{data.survey_title}</span>
           <div
@@ -48,14 +50,12 @@ const SurveyItem: React.FC<Props> = ({ data }) => {
                   flexDirection: 'column',
                   display: 'flex',
                 }}
-                onClick={() => navigate(`/participants/${data.id}`)}
               >
                 <div>Closed Survey</div>
                 <div style={{ fontSize: '12px' }}>{`(${data.automate_time})`}</div>
               </div>
             ) : (
               <div
-                onClick={() => navigate(`/participants/${data.id}`)}
                 style={{
                   color: PRIMARY_COLOR,
                   fontWeight: 'bold',

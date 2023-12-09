@@ -6,6 +6,7 @@ import EnrollmentPage from './Enrollment/EnrollmentPage';
 import ParticipantsPage from './Participants/ParticipantsPage';
 import AnswerDetailPage from './AnswerDetail/AnswerDetailPage';
 import RaffleResultPage from './Result/RaffleResultPage';
+import CompletePage from './Complete/CompletePage';
 
 export enum Paths {
   Survey = '/survey',
@@ -14,6 +15,7 @@ export enum Paths {
   Participants = '/participants/:id',
   AnswerDetail = '/answer/detail',
   Result = '/result/:id',
+  Complete = '/completed',
 }
 
 const Router = () => {
@@ -27,6 +29,7 @@ const Router = () => {
         <Route path={Paths.Participants} element={<ParticipantsPage />} />
         <Route path={Paths.AnswerDetail} element={<AnswerDetailPage />} />
         <Route path={Paths.Result} element={<RaffleResultPage />} />
+        <Route path={Paths.Complete} element={<CompletePage />} />
       </Route>
     </ReactRoutes>
   );

@@ -49,7 +49,7 @@ const EnrollmentPage = () => {
   };
 
   const submitCallback = () => {
-    navigate(Paths.Survey, { replace: true });
+    navigate(Paths.Complete, { replace: true });
   };
 
   const handleAnswer = (_id: string, _info: any) => {
