@@ -103,7 +103,10 @@ const RaffleResultPage = () => {
                     width: '65%',
                     paddingBottom: '8px',
                     paddingLeft: '4px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     marginBottom: '16px',
+                    alignItems: 'center',
                   }}
                   key={email}
                 >
@@ -111,7 +114,18 @@ const RaffleResultPage = () => {
                     {idx + 1}. {email}
                   </div>
 
-                  <a href={`mailto:${email}`}>메일보내기</a>
+                  <a
+                    href={`mailto:${email}`}
+                    style={{
+                      border: `1px solid ${PRIMARY_COLOR}`,
+                      borderRadius: '4px',
+                      padding: '4px 6px',
+                      color: 'inherit',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Send email
+                  </a>
                 </div>
               );
             })}

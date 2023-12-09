@@ -60,7 +60,7 @@ const Qgenerator: React.FC<Props> = ({
     >
       <Stack direction={'row'} gap={4} alignItems={'center'}>
         <HInput
-          placeholder="Untitled Questionnaire"
+          placeholder="Question"
           disableUnderline
           value={item.title}
           onChange={(e) => onTitleChange(item.id, e.target.value)}

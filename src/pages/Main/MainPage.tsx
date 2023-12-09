@@ -195,7 +195,7 @@ const MainPage = () => {
           <Box border="2px solid #DADCE0" borderTop="none" padding="12px">
             <Input
               autoFocus
-              placeholder="Untitled Questionnaire"
+              placeholder="Title"
               disableUnderline
               value={surveyTitle}
               onChange={(e) => setSurveyTitle(e.target.value)}
@@ -218,6 +218,7 @@ const MainPage = () => {
                 height: 'auto',
                 minHeight: '140px',
                 outline: 'none',
+                fontFamily: 'inherit',
               }}
               placeholder="Describe your survey"
               value={surveyDesc}
