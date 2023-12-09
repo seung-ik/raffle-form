@@ -14,9 +14,9 @@ export function useRaffleContract() {
   const contractAddress = RAFFLE_CONTRACT_ADDRESS;
   const contract = new web3.eth.Contract(contractAbi, contractAddress);
 
-  const addApplicator = async (_userEmail: string, _userId: string) => {
-    const functionName = 'addApplicator';
-    const transaction = contract.methods[functionName](_userEmail, _userId);
+  const addApplication = async (_surveyId: string, _userEmail: string) => {
+    const functionName = 'addApplication';
+    const transaction = contract.methods[functionName](_surveyId, _userEmail);
     const gasEstimate = await transaction.estimateGas({ from: account.address });
 
     const result = await transaction.send({
@@ -27,9 +27,13 @@ export function useRaffleContract() {
     return result;
   };
 
-  const setSurvey = async (_timestamp: number, _surveyId: string): Promise<any> => {
+  const setSurvey = async (
+    _surveyId: string,
+    _timestamp: number,
+    _winnersCount: number,
+  ): Promise<any> => {
     const functionName = 'setSurvey';
-    const transaction = contract.methods[functionName](_timestamp, 23); //TODO: _surveyId 로 변경해야됨
+    const transaction = contract.methods[functionName](_surveyId, _timestamp, _winnersCount);
     const gasEstimate = await transaction.estimateGas({ from: account.address });
 
     const result = await transaction.send({
@@ -51,9 +55,23 @@ export function useRaffleContract() {
     // console.log(contract);
   };
 
+  const checkRaffle = async (_surveyId: any) => {
+    const functionName = 'checkRaffle';
+    const transaction = contract.methods[functionName](_surveyId);
+    const gasEstimate = await transaction.estimateGas({ from: account.address });
+
+    const result = await transaction.send({
+      from: account.address,
+      gas: String(Number(gasEstimate) + 10000), // Add some extra gas for safety margin
+    });
+
+    return result;
+  };
+
   return {
     getSurvey,
     setSurvey,
-    addApplicator,
+    addApplication,
+    checkRaffle,
   };
 }

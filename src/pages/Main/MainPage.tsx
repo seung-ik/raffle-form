@@ -167,7 +167,7 @@ const MainPage = () => {
         { merge: true },
       );
 
-      const txResult = await setSurvey(parsedAutomatTime, surveyId); // 컨트랙트에 저장
+      const txResult = await setSurvey(surveyId, parsedAutomatTime, Number(winnersCount)); // 컨트랙트에 저장
       setTxResult(txResult);
     } catch (err) {
       console.log(err);

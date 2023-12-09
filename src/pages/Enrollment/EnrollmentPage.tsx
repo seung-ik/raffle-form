@@ -21,10 +21,9 @@ const EnrollmentPage = () => {
   const [txResult, setTxResult] = useState<any>({});
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
-  const { addApplicator } = useRaffleContract();
+  const { addApplication } = useRaffleContract();
 
   const onClickSubmit = async () => {
-    console.log('submit', email, questions);
     setIsOpenDialog(true);
     setSubmitLoading(true);
     try {
@@ -40,7 +39,7 @@ const EnrollmentPage = () => {
         { merge: true },
       );
 
-      const txResult = await addApplicator(email, answerId);
+      const txResult = await addApplication(id as string, email);
       setTxResult(txResult);
     } catch (err) {
       console.log(err);

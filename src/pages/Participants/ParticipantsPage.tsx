@@ -6,12 +6,19 @@ import Header from '@components/Header';
 import styled from '@emotion/styled';
 import { Box, Button } from '@mui/material';
 import { GRAY, PRIMARY_COLOR } from '@const/style';
+import dayjs from 'dayjs';
 
 const ParticipantsPage = () => {
   const { id } = useParams();
   const [answerList, setAnswerList] = useState<any[]>([]);
   const [surveyInfo, setSurveyInfo] = useState<any>({ survey_title: '', survey_describe: '' });
   const navigate = useNavigate();
+
+  const targetTimeFormat = 'YYYY-MM-DD HH:mm:ss';
+  const targetTime = dayjs(surveyInfo.automate_time, { format: targetTimeFormat });
+  const isClosed = dayjs().isAfter(targetTime);
+
+  // console.log(surveyInfo, 'surveyInfo', isClosed);
 
   async function queryDocumentsByField(
     collectionName: string,
@@ -45,6 +52,7 @@ const ParticipantsPage = () => {
       fetchData(id);
     }
   }, [id]);
+
   return (
     <>
       <Header />
@@ -136,6 +144,13 @@ const ParticipantsPage = () => {
               </Box>
             );
           })}
+          {isClosed && (
+            <div style={{ display: 'flex', minWidth: '580px', maxWidth: '880px', width: '100%' }}>
+              <Button variant="contained" onClick={() => navigate(`/result/${surveyInfo.id}`)}>
+                View Lottery Result
+              </Button>
+            </div>
+          )}
         </Wrapper>
       </div>
     </>

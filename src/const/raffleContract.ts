@@ -1,19 +1,59 @@
-export const RAFFLE_CONTRACT_ADDRESS = '0x444a6A6FF43A3dA77De25A3Fc3382B2E4dF0D89B';
+export const RAFFLE_CONTRACT_ADDRESS = '0x9BEDED263eC19951F210d618f85e3AE9C20e3604';
 export const RAFFLE_CONTRACT_ABI = [
   {
     inputs: [
       {
+        internalType: 'uint64',
+        name: 'subscriptionId',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'have',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'want',
+        type: 'address',
+      },
+    ],
+    name: 'OnlyCoordinatorCanFulfill',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'randomNumber',
+        type: 'uint256',
+      },
+    ],
+    name: 'RandomNumberStored',
+    type: 'event',
+  },
+  {
+    inputs: [
+      {
         internalType: 'string',
-        name: '_name',
+        name: '_surveyId',
         type: 'string',
       },
       {
         internalType: 'string',
-        name: '_num',
+        name: '_email',
         type: 'string',
       },
     ],
-    name: 'addApplicator',
+    name: 'addApplication',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -21,25 +61,34 @@ export const RAFFLE_CONTRACT_ABI = [
   {
     inputs: [
       {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes',
+        internalType: 'string',
+        name: '_surveyId',
+        type: 'string',
       },
     ],
-    name: 'checkUpkeep',
+    name: 'checkRaffle',
     outputs: [
       {
-        internalType: 'bool',
-        name: 'upkeepNeeded',
-        type: 'bool',
-      },
-      {
-        internalType: 'bytes',
+        internalType: 'string',
         name: '',
-        type: 'bytes',
+        type: 'string',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'checkRandom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'choice',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -57,14 +106,47 @@ export const RAFFLE_CONTRACT_ABI = [
   },
   {
     inputs: [],
-    name: 'deleteApplicator',
+    name: 'dateTime',
+    outputs: [
+      {
+        internalType: 'contract DateTime',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'deleteApplication',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [],
-    name: 'getAllAppicator',
+    name: 'deleteSurvey',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getAllAppication',
+    outputs: [
+      {
+        internalType: 'string[]',
+        name: '',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getAllSurvey',
     outputs: [
       {
         internalType: 'string[]',
@@ -79,11 +161,11 @@ export const RAFFLE_CONTRACT_ABI = [
     inputs: [
       {
         internalType: 'string',
-        name: '_num',
+        name: '_email',
         type: 'string',
       },
     ],
-    name: 'getApplicator',
+    name: 'getApplication',
     outputs: [
       {
         internalType: 'string',
@@ -107,12 +189,40 @@ export const RAFFLE_CONTRACT_ABI = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'surveyId',
-        type: 'uint256',
+        internalType: 'string',
+        name: '_surveyId',
+        type: 'string',
       },
     ],
     name: 'getSurvey',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string[]',
+        name: '',
+        type: 'string[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'latestRandomNum',
     outputs: [
       {
         internalType: 'uint256',
@@ -125,28 +235,15 @@ export const RAFFLE_CONTRACT_ABI = [
   },
   {
     inputs: [],
-    name: 'idx',
+    name: 'publicSurveyId',
     outputs: [
       {
-        internalType: 'uint256',
+        internalType: 'string',
         name: '',
-        type: 'uint256',
+        type: 'string',
       },
     ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes',
-      },
-    ],
-    name: 'performUpkeep',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -160,12 +257,35 @@ export const RAFFLE_CONTRACT_ABI = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'timeStamp',
+        name: 'requestId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'randomWords',
+        type: 'uint256[]',
+      },
+    ],
+    name: 'rawFulfillRandomWords',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_surveyId',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: '_raffleTime',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: 'surveyId',
+        name: 'check',
         type: 'uint256',
       },
     ],
@@ -176,17 +296,12 @@ export const RAFFLE_CONTRACT_ABI = [
   },
   {
     inputs: [],
-    name: 'winning',
+    name: 'timeStamp',
     outputs: [
       {
-        internalType: 'string',
+        internalType: 'uint256',
         name: '',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
