@@ -16,6 +16,7 @@ import OptionItem from './OptionItem';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 interface Props {
   item: {
@@ -83,13 +84,24 @@ const Qgenerator: React.FC<Props> = ({
       {item.type !== 'short' &&
         item.options.map((option) => {
           return (
-            <OptionItem key={option.id} item={option} qId={item.id} onChange={handleOptionChange} />
+            <OptionItem
+              key={option.id}
+              item={option}
+              qId={item.id}
+              type={item.type}
+              onChange={handleOptionChange}
+            />
           );
         })}
 
       {item.type !== 'short' && (
         <Row mt={2}>
-          <CircleOutlinedIcon sx={{ fontSize: 20, color: GRAY }} />
+          {item.type === 'multiple' ? (
+            <CheckBoxIcon sx={{ fontSize: 20, color: GRAY }} />
+          ) : (
+            <CircleOutlinedIcon sx={{ fontSize: 20, color: GRAY }} />
+          )}
+
           <span
             onClick={() => onClickAddOption(item.id)}
             style={{ color: '#7896C9', cursor: 'pointer' }}
