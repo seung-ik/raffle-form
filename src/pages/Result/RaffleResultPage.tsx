@@ -37,7 +37,7 @@ const RaffleResultPage = () => {
         // const answerInfo = await queryDocumentsByField('answer', 'survey_id', _surveyId);
         const surveyInfo = await queryDocumentsByField('question', 'survey_id', _surveyId);
         setSurveyInfo(surveyInfo[0]);
-        // await checkRaffle(_surveyId);
+        await checkRaffle(_surveyId);
         const surveyResult = await getSurvey(_surveyId);
         setRaffleResult(surveyResult[4]);
 
