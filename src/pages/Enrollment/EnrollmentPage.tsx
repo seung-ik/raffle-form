@@ -10,12 +10,17 @@ import SubmitWithDialog from '@components/SubmitWithDialog';
 import { Paths } from '@pages/Router';
 import MainPage from '../Main/MainPage';
 import { useRaffleContract } from '@hooks/useRaffleContract';
+import dayjs from 'dayjs';
 
 const EnrollmentPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [surveyInfo, setSurveyInfo] = useState({ survey_title: '', survey_describe: '' });
+  const [surveyInfo, setSurveyInfo] = useState({
+    survey_title: '',
+    survey_describe: '',
+    automate_time: '',
+  });
   const [questions, setQuestions] = useState<any[]>([]);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [txResult, setTxResult] = useState<any>({});
@@ -24,6 +29,14 @@ const EnrollmentPage = () => {
   const { addApplication } = useRaffleContract();
 
   const onClickSubmit = async () => {
+    const currentTime = dayjs();
+    const targetDate = dayjs(surveyInfo.automate_time);
+
+    // 두 날짜를 비교합니다.
+    if (!currentTime.isBefore(targetDate)) {
+      alert('ended survey');
+      return;
+    }
     setIsOpenDialog(true);
     setSubmitLoading(true);
     try {

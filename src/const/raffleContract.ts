@@ -1,4 +1,4 @@
-export const RAFFLE_CONTRACT_ADDRESS = '0xD118Df343B6dF5Ee4cd67C5aC8942AB347e43a01';
+export const RAFFLE_CONTRACT_ADDRESS = '0x12C990AE191279BfFa34f65044E9cd20B3eB5147';
 export const RAFFLE_CONTRACT_ABI = [
   {
     inputs: [
@@ -67,26 +67,13 @@ export const RAFFLE_CONTRACT_ABI = [
       },
     ],
     name: 'checkRaffle',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'checkRandom',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [],
-    name: 'choice',
+    name: 'checkRandom',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -189,6 +176,44 @@ export const RAFFLE_CONTRACT_ABI = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '_raffleTime',
+        type: 'uint256',
+      },
+    ],
+    name: 'getRaffleTime',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_surveyId',
+        type: 'string',
+      },
+    ],
+    name: 'getRandomNum',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'string',
         name: '_surveyId',
         type: 'string',
@@ -216,6 +241,11 @@ export const RAFFLE_CONTRACT_ABI = [
         name: '',
         type: 'string[]',
       },
+      {
+        internalType: 'string[]',
+        name: '',
+        type: 'string[]',
+      },
     ],
     stateMutability: 'view',
     type: 'function',
@@ -228,19 +258,6 @@ export const RAFFLE_CONTRACT_ABI = [
         internalType: 'uint256',
         name: '',
         type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'publicSurveyId',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
       },
     ],
     stateMutability: 'view',

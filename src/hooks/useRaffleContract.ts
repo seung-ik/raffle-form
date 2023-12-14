@@ -33,7 +33,7 @@ export function useRaffleContract() {
     _winnersCount: number,
   ): Promise<any> => {
     const functionName = 'setSurvey';
-    const transaction = contract.methods[functionName](_surveyId, _timestamp, _winnersCount);
+    const transaction = contract.methods[functionName](_surveyId, _timestamp / 1000, _winnersCount);
     const gasEstimate = await transaction.estimateGas({ from: account.address });
 
     const result = await transaction.send({
@@ -50,7 +50,7 @@ export function useRaffleContract() {
     const transaction = await contract.methods.getSurvey(_surveyId).call();
     //       const gasEstimate = await transaction.estimateGas({ from: account.address });
 
-    console.log(transaction);
+    return transaction;
     // const contract = new web3.eth.Contract(contractAbi, contractAddress);
     // console.log(contract);
   };

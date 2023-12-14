@@ -6,15 +6,13 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../../firebase';
 import { useParams } from 'react-router-dom';
+import { useRaffleContract } from '@hooks/useRaffleContract';
 
 const RaffleResultPage = () => {
   const { id } = useParams();
   const [surveyInfo, setSurveyInfo] = useState<any>({ survey_title: '', survey_describe: '' });
-  const [raffleResult, setRaffleResult] = useState<any[]>([
-    'l4nk7vsz@gmail.com',
-    'pq3rwd5s@gmail.com',
-    'j2tx3lmf@gmail.com',
-  ]);
+  const [raffleResult, setRaffleResult] = useState<any[]>([]);
+  const { checkRaffle, getSurvey } = useRaffleContract();
 
   async function queryDocumentsByField(
     collectionName: string,
@@ -35,9 +33,14 @@ const RaffleResultPage = () => {
   useEffect(() => {
     const fetchData = async (_surveyId: string) => {
       try {
+        console.log('call');
         // const answerInfo = await queryDocumentsByField('answer', 'survey_id', _surveyId);
         const surveyInfo = await queryDocumentsByField('question', 'survey_id', _surveyId);
         setSurveyInfo(surveyInfo[0]);
+        // await checkRaffle(_surveyId);
+        const surveyResult = await getSurvey(_surveyId);
+        setRaffleResult(surveyResult[4]);
+
         // setAnswerList(answerInfo);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -84,7 +87,6 @@ const RaffleResultPage = () => {
               </div>
             </Box>
           </Box>
-          {raffleResult.length === 0 && <span>There are no participants in the raffle</span>}
           <Box
             border="2px solid #DADCE0"
             borderRadius="4px"
